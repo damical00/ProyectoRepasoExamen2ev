@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ProyectoRepasoExamen2ev</string>
+    <string name="inicio">Inicio</string>
+    <string name="insertar">Insertar</string>
+    <string name="actualizar">Actualizar</string>
+    <string name="insertar_persona">Insertar persona</string>
+    <string name="atras">Atrás</string>
 </resources>
