@@ -117,7 +117,7 @@ fun PersonasApp(
 @Composable
 fun PantallaActualizarPersonas(
     personas: Personas,
-    onPersonaActualizada: () -> Boolean,
+    onPersonaActualizada: (Personas) -> Boolean,
     modifier: Modifier
 ) {
     TODO("Not yet implemented")

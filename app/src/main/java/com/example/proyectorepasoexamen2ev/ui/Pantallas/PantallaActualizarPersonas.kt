@@ -7,7 +7,7 @@ import com.example.proyectorepasoexamen2ev.modelo.Personas
 @Composable
 fun PantallaActualizarPersonas(
     personas: Personas,
-    onPersonaActualizada: () -> Boolean,
+    onPersonaActualizada: (Personas) -> Boolean,
     modifier: Modifier
 ) {
     TODO("Not yet implemented")
