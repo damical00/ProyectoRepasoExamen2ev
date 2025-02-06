@@ -5,4 +5,9 @@
     <string name="actualizar">Actualizar</string>
     <string name="insertar_persona">Insertar persona</string>
     <string name="atras">Atrás</string>
+    <string name="error">Error</string>
+    <string name="nombre">Nombre</string>
+    <string name="apellido">Apellido</string>
+    <string name="dni">DNI</string>
+    <string name="fechaNacimiento">Fecha Nacimiento</string>
 </resources>

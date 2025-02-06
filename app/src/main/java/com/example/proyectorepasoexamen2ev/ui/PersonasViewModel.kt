@@ -7,11 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavBackStackEntry
 import com.example.proyectorepasoexamen2ev.PersonasAplicacion
 import com.example.proyectorepasoexamen2ev.datos.PersonasRepositorios
 import com.example.proyectorepasoexamen2ev.modelo.Personas
@@ -20,6 +18,7 @@ import retrofit2.HttpException
 import java.io.IOException
 
 sealed interface PersonasUiState {
+
     data class ObtenerExito(val personas: List<Personas>): PersonasUiState
     data class CrearExito(val personas: Personas):PersonasUiState
     data class ActualizarExito(val personas: Personas): PersonasUiState
@@ -64,6 +63,7 @@ class PersonasViewModel(private val personasRepositorios: PersonasRepositorios):
             personasUiState = try {
                 val personaInsertado = personasRepositorios.insertarPersonas(personas)
                 PersonasUiState.CrearExito(personaInsertado)
+
             } catch (e: IOException){
                 PersonasUiState.Error
             } catch (e: HttpException){

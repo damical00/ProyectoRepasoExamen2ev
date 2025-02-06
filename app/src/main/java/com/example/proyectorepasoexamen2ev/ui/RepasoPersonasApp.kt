@@ -26,6 +26,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.proyectorepasoexamen2ev.R
+import com.example.proyectorepasoexamen2ev.modelo.Personas
+import com.example.proyectorepasoexamen2ev.ui.Pantallas.PantallaInsertarPersonas
+import com.example.proyectorepasoexamen2ev.ui.Pantallas.PantallaPersonas
 
 enum class PantallasProyecto(@StringRes val titulo: Int){
     Inicio(titulo = R.string.inicio),
@@ -74,11 +77,11 @@ fun PersonasApp(
         ){
             //Grafo de rutas
             composable(route = PantallasProyecto.Inicio.name){
-                PantallaListadoPersonas(
-                    appUIState = uiState,
+                PantallaPersonas(
+                    appUiState = uiState,
                     onPersonasObtenidas={viewModel.obtenerPersonas()},
                     onPersonaEliminada={viewModel.eliminarPersona(it)},
-                    onCochePulsado={
+                    onPersonaPulsada ={
                         viewModel.actualizarPersonaPulsada(it)
                         navController.navigate(PantallasProyecto.Actualizar.name)
                     },
@@ -109,6 +112,15 @@ fun PersonasApp(
 
         }
     }
+}
+
+@Composable
+fun PantallaActualizarPersonas(
+    personas: Personas,
+    onPersonaActualizada: () -> Boolean,
+    modifier: Modifier
+) {
+    TODO("Not yet implemented")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
