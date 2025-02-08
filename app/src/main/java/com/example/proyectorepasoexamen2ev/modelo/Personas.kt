@@ -17,8 +17,9 @@ data class Personas(
     @SerialName(value = "apellido")
     val apellido: String="",
 
-    @SerialName(value ="fecha_nacimiento")
-    val fechaNacimiento: String=""
+    @SerialName("fecha_nacimiento")
+    val fechaNacimiento: String = ""
+
 ) {
 
 }

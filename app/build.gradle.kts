@@ -71,6 +71,8 @@ dependencies {
     implementation(libs.squareup.okhttp3)
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+
     //-------------------------------------
 
     testImplementation(libs.junit)

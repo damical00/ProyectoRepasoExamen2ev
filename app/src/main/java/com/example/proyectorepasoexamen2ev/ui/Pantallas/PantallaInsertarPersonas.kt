@@ -78,8 +78,8 @@ fun PantallaInsertarPersonas(
 
         Button(
             onClick = {
-                val coche = Personas(dni=dni, nombre = nombre, apellido = apellido, fechaNacimiento = fechaNacimiento)
-                onInsertarPulsado(coche)
+                val persona = Personas(dni=dni, nombre = nombre, apellido = apellido, fechaNacimiento = fechaNacimiento)
+                onInsertarPulsado(persona)
             }
         ) {
             Text(text = stringResource(R.string.insertar))

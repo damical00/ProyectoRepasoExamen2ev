@@ -1,13 +1,14 @@
 <resources>
     <string name="app_name">ProyectoRepasoExamen2ev</string>
-    <string name="inicio">Inicio</string>
-    <string name="insertar">Insertar</string>
-    <string name="actualizar">Actualizar</string>
-    <string name="insertar_persona">Insertar persona</string>
-    <string name="atras">Atrás</string>
-    <string name="error">Error</string>
-    <string name="nombre">Nombre</string>
-    <string name="apellido">Apellido</string>
-    <string name="dni">DNI</string>
-    <string name="fechaNacimiento">Fecha Nacimiento</string>
+    <string name="inicio" translatable="false">Inicio</string>
+    <string name="insertar" translatable="false">Insertar</string>
+    <string name="actualizar" translatable="false">Actualizar</string>
+    <string name="insertar_persona" translatable="false">Insertar persona</string>
+    <string name="atras" translatable="false">Atrás</string>
+    <string name="error" translatable="false">Error</string>
+    <string name="nombre" translatable="false" >Nombre</string>
+    <string name="apellido" translatable="false">Apellido</string>
+    <string name="dni" translatable="false">DNI</string>
+    <string name="fechaNacimiento" translatable="false">Fecha Nacimiento</string>
+    <string name="id" translatable="false">Id</string>
 </resources>

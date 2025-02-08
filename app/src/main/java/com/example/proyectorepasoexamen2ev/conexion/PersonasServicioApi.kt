@@ -1,6 +1,6 @@
 package com.example.proyectorepasoexamen2ev.conexion
 
-import android.app.Person
+
 import com.example.proyectorepasoexamen2ev.modelo.Personas
 import retrofit2.http.Body
 import retrofit2.http.DELETE
