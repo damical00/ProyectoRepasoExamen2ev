@@ -50,8 +50,10 @@ class PersonasViewModel(private val personasRepositorios: PersonasRepositorios):
                 val listaPersonas = personasRepositorios.obtenerPersonas()
                 PersonasUiState.ObtenerExito(listaPersonas)
             } catch (e: IOException){
+                print("Error de red: ${e.message}")
                 PersonasUiState.Error
             } catch (e: HttpException){
+                print("Error de http: ${e.message}")
                 PersonasUiState.Error
             }
         }

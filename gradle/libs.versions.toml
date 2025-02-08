@@ -48,6 +48,7 @@ jakewharton-retrofit = { group = "com.jakewharton.retrofit", name = "retrofit2-k
 jetbrains-kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization"}
 squareup-retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit"}
 androidx-room-common = { group = "androidx.room", name = "room-common", version.ref = "roomCommon" }
+
 #---------------------------------------------------------------------------------------------------------------------------------
 
 [plugins]
