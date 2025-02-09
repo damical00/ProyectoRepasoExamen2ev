@@ -43,21 +43,24 @@ class PersonasViewModel(private val personasRepositorios: PersonasRepositorios):
             obtenerPersonas()
         }
 
-    fun obtenerPersonas(){
+    fun obtenerPersonas() {
         viewModelScope.launch {
+            println("Llamando a obtenerPersonas()")
             personasUiState = PersonasUiState.Cargando
             personasUiState = try {
                 val listaPersonas = personasRepositorios.obtenerPersonas()
+                println("Datos obtenidos: $listaPersonas")
                 PersonasUiState.ObtenerExito(listaPersonas)
-            } catch (e: IOException){
-                print("Error de red: ${e.message}")
+            } catch (e: IOException) {
+                println("Error de red: ${e.message}")
                 PersonasUiState.Error
-            } catch (e: HttpException){
-                print("Error de http: ${e.message}")
+            } catch (e: HttpException) {
+                println("Código de error HTTP: ${e.code()}, Mensaje: ${e.message}")
                 PersonasUiState.Error
             }
         }
     }
+
 
     fun insertarPersonas(personas: Personas){
         viewModelScope.launch {

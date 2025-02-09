@@ -11,4 +11,5 @@
     <string name="dni" translatable="false">DNI</string>
     <string name="fechaNacimiento" translatable="false">Fecha Nacimiento</string>
     <string name="id" translatable="false">Id</string>
+    <string name="ninguna_fecha_seleccinada">Ninguna fecha seleccionada</string>
 </resources>

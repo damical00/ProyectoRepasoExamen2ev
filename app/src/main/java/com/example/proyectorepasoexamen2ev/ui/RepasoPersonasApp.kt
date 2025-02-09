@@ -27,6 +27,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.proyectorepasoexamen2ev.R
 import com.example.proyectorepasoexamen2ev.modelo.Personas
+import com.example.proyectorepasoexamen2ev.ui.Pantallas.PantallaActualizarPersonas
 import com.example.proyectorepasoexamen2ev.ui.Pantallas.PantallaInsertarPersonas
 import com.example.proyectorepasoexamen2ev.ui.Pantallas.PantallaPersonas
 
@@ -91,6 +92,7 @@ fun PersonasApp(
 
             composable(route = PantallasProyecto.Insertar.name){
                 PantallaInsertarPersonas(
+                    personas = viewModel.personaPulsada,
                     onInsertarPulsado = {
                         viewModel.insertarPersonas(it)
                         navController.popBackStack(PantallasProyecto.Inicio.name, inclusive = false)
@@ -114,14 +116,8 @@ fun PersonasApp(
     }
 }
 
-@Composable
-fun PantallaActualizarPersonas(
-    personas: Personas,
-    onPersonaActualizada: (Personas) -> Boolean,
-    modifier: Modifier
-) {
-    TODO("Not yet implemented")
-}
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
