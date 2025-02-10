@@ -84,7 +84,7 @@ class ProfesoresViewModel(private val profesoresRepositorio: ProfesoresRepositor
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val aplicacion = (this[APPLICATION_KEY] as PersonasAplicacion)
-                val productoRepositorio = aplicacion.contenedor.productoRepositorio
+                val productoRepositorio = aplicacion.contenedor.profesoresRepositorio
                 ProfesoresViewModel(profesoresRepositorio = productoRepositorio)
             }
         }
