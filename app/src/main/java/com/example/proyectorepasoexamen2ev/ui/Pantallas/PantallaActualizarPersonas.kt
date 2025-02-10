@@ -22,30 +22,38 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.proyectorepasoexamen2ev.R
 import com.example.proyectorepasoexamen2ev.modelo.Personas
-import androidx.compose.material3.DatePicker
-import androidx.compose.material3.DatePickerDialog
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+/**
+ * Pantalla para actualizar la información de una persona.
+ *
+ * @param personas Objeto de tipo Personas que contiene la información actual.
+ * @param onPersonaActualizada Función lambda que maneja la actualización de la persona.
+ * @param modifier Modificador para ajustar el diseño del componente.
+ */
 @Composable
 fun PantallaActualizarPersonas(
     personas: Personas,
     onPersonaActualizada: (Personas) -> Boolean,
     modifier: Modifier
 ) {
+    // Variables de estado para los campos de entrada y control de la fecha seleccionada
     var dni by remember { mutableStateOf(personas.dni) }
     var nombre by remember { mutableStateOf(personas.nombre) }
     var apellido by remember { mutableStateOf(personas.apellido) }
     var fechaElegida: Long? by remember { mutableStateOf(null) }
     var botonFechaPulsado by remember { mutableStateOf(false) }
 
+    // Columna que organiza los elementos verticalmente
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
-        Spacer(Modifier.height(15.dp))
+        Spacer(Modifier.height(15.dp)) // Espaciador para separación vertical
 
+        // Campo de texto para mostrar el ID (solo lectura)
         TextField(
             value = personas.id,
             label = { Text(text = stringResource(R.string.id)) },
@@ -55,36 +63,41 @@ fun PantallaActualizarPersonas(
 
         Spacer(Modifier.height(15.dp))
 
+        // Campo de texto para el nombre
         TextField(
             value = nombre,
             label = { Text(text = stringResource(R.string.nombre)) },
-            onValueChange = {nombre = it},
+            onValueChange = { nombre = it },
         )
 
         Spacer(Modifier.height(15.dp))
 
+        // Campo de texto para el apellido
         TextField(
             value = apellido,
             label = { Text(text = stringResource(R.string.apellido)) },
-            onValueChange = {apellido = it},
+            onValueChange = { apellido = it },
         )
 
         Spacer(Modifier.height(15.dp))
 
+        // Botón para abrir el selector de fecha
         Button(onClick = { botonFechaPulsado = true }) {
             Text(text = stringResource(R.string.fechaNacimiento))
         }
 
+        // Mostrar el DatePickerDialog si el botón de fecha ha sido pulsado
         if (botonFechaPulsado) {
             DatePickerMostrado(
                 onConfirm = { fecha ->
-                    fechaElegida = fecha  // Asegúrate de que `fecha` ya sea un String con el formato correcto
-                    botonFechaPulsado = false
+                    fechaElegida = fecha // Asigna la fecha seleccionada
+                    botonFechaPulsado = false // Cierra el diálogo
                 },
-                onDismiss = { botonFechaPulsado = false }
+                onDismiss = { botonFechaPulsado = false } // Cierra el diálogo sin seleccionar
             )
         }
 
+        // Mostrar la fecha seleccionada o un mensaje si no se ha seleccionado ninguna
         if (fechaElegida != null) {
             val formattedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(fechaElegida!!))
             Text(text = "Fecha seleccionada: $formattedDate")
@@ -92,40 +105,54 @@ fun PantallaActualizarPersonas(
             Text(text = stringResource(R.string.ninguna_fecha_seleccinada))
         }
 
-
         Spacer(Modifier.height(15.dp))
 
+        // Botón para actualizar la información de la persona
         Button(
             onClick = {
+                // Formatea la fecha seleccionada o usa la original si no se ha cambiado
                 val formattedFecha = fechaElegida?.let {
                     SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(it))
-                } ?: personas.fechaNacimiento // Si no se cambia la fecha, usa la original
+                } ?: personas.fechaNacimiento
 
-                val personaActualizada = Personas(id = personas.id, dni = dni,nombre = nombre,apellido = apellido,fechaNacimiento = formattedFecha
+                // Crea un nuevo objeto Personas con la información actualizada
+                val personaActualizada = Personas(
+                    id = personas.id,
+                    dni = dni,
+                    nombre = nombre,
+                    apellido = apellido,
+                    fechaNacimiento = formattedFecha
                 )
 
-                val actualizado = onPersonaActualizada(personaActualizada) // Verifica si la actualización fue exitosa
+                // Llama a la función de actualización y maneja el resultado
+                val actualizado = onPersonaActualizada(personaActualizada)
             }
         ) {
             Text(text = stringResource(R.string.actualizar))
         }
-
     }
-
 }
 
+/**
+ * Composable que muestra un diálogo de selección de fecha.
+ *
+ * @param onConfirm Función lambda que maneja la confirmación de la fecha seleccionada.
+ * @param onDismiss Función lambda que maneja la cancelación del diálogo.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DatePickerMostrado(
     onConfirm: (Long) -> Unit,
-    onDismiss: () ->  Unit
+    onDismiss: () -> Unit
 ) {
-    val datePickerState = rememberDatePickerState()
+    val datePickerState = rememberDatePickerState() // Estado del DatePicker
+
+    // Diálogo que contiene el DatePicker
     DatePickerDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButton(onClick = {
-                datePickerState.selectedDateMillis?.let { onConfirm(it) }
+                datePickerState.selectedDateMillis?.let { onConfirm(it) } // Llama a onConfirm con la fecha seleccionada
                 onDismiss()
             }) {
                 Text("Aceptar")
@@ -137,6 +164,6 @@ fun DatePickerMostrado(
             }
         }
     ) {
-        DatePicker(state = datePickerState)
+        DatePicker(state = datePickerState) // Componente DatePicker con su estado
     }
 }

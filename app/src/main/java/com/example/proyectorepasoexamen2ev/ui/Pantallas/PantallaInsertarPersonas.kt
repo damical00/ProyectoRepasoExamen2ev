@@ -27,7 +27,12 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun PantallaInsertarPersonas(personas: Personas,onInsertarPulsado: (Personas) -> Unit, modifier: Modifier) {
+fun PantallaInsertarPersonas(
+    personas: Personas,
+    onInsertarPulsado: (Personas) -> Unit,
+    modifier: Modifier
+) {
+    // Estados para almacenar los valores de los campos de texto y la fecha seleccionada
     var dni by remember { mutableStateOf("") }
     var nombre by remember { mutableStateOf("") }
     var apellido by remember { mutableStateOf("") }
@@ -35,13 +40,15 @@ fun PantallaInsertarPersonas(personas: Personas,onInsertarPulsado: (Personas) ->
     var fechaElegida: Long? by remember { mutableStateOf(null) }
     var botonFechaPulsado by remember { mutableStateOf(false) }
 
+    // Columna principal que organiza los elementos de la interfaz de usuario verticalmente
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
     ) {
-
+        // Espaciador para añadir espacio entre los elementos
         Spacer(Modifier.height(15.dp))
 
+        // Campo de texto para ingresar el DNI
         TextField(
             value = dni,
             label = { Text(text = stringResource(R.string.dni)) },
@@ -50,6 +57,7 @@ fun PantallaInsertarPersonas(personas: Personas,onInsertarPulsado: (Personas) ->
 
         Spacer(Modifier.height(15.dp))
 
+        // Campo de texto para ingresar el nombre
         TextField(
             value = nombre,
             label = { Text(text = stringResource(R.string.nombre)) },
@@ -58,6 +66,7 @@ fun PantallaInsertarPersonas(personas: Personas,onInsertarPulsado: (Personas) ->
 
         Spacer(Modifier.height(15.dp))
 
+        // Campo de texto para ingresar el apellido
         TextField(
             value = apellido,
             label = { Text(text = stringResource(R.string.apellido)) },
@@ -66,21 +75,23 @@ fun PantallaInsertarPersonas(personas: Personas,onInsertarPulsado: (Personas) ->
 
         Spacer(Modifier.height(15.dp))
 
+        // Botón para abrir el selector de fecha
         Button(onClick = { botonFechaPulsado = true }) {
             Text(text = stringResource(R.string.fechaNacimiento))
         }
 
+        // Mostrar el DatePickerDialog si el botón de fecha ha sido pulsado
         if (botonFechaPulsado) {
             DatePickerMostrado(
                 onConfirm = { fecha ->
-                    fechaElegida =
-                        fecha  // Asegúrate de que `fecha` ya sea un String con el formato correcto
-                    botonFechaPulsado = false
+                    fechaElegida = fecha  // Almacena la fecha seleccionada
+                    botonFechaPulsado = false  // Cierra el diálogo
                 },
-                onDismiss = { botonFechaPulsado = false }
+                onDismiss = { botonFechaPulsado = false }  // Cierra el diálogo sin seleccionar fecha
             )
         }
 
+        // Mostrar la fecha seleccionada o un mensaje si no se ha seleccionado ninguna fecha
         if (fechaElegida != null) {
             val formattedDate =
                 SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(fechaElegida!!))
@@ -89,13 +100,14 @@ fun PantallaInsertarPersonas(personas: Personas,onInsertarPulsado: (Personas) ->
             Text(text = stringResource(R.string.ninguna_fecha_seleccinada))
         }
 
-
         Spacer(Modifier.height(16.dp))
 
+        // Formatear la fecha seleccionada o usar la fecha original si no se ha cambiado
         val formattedFecha = fechaElegida?.let {
             SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(it))
-        } ?: personas.fechaNacimiento // Si no se cambia la fecha, usa la original
+        } ?: personas.fechaNacimiento
 
+        // Botón para insertar la persona con los datos ingresados
         Button(
             onClick = {
                 val persona = Personas(
@@ -104,7 +116,7 @@ fun PantallaInsertarPersonas(personas: Personas,onInsertarPulsado: (Personas) ->
                     apellido = apellido,
                     fechaNacimiento = formattedFecha
                 )
-                onInsertarPulsado(persona)
+                onInsertarPulsado(persona)  // Llama a la función de callback con la nueva persona
             }
         ) {
             Text(text = stringResource(R.string.insertar))
@@ -118,23 +130,26 @@ fun DatePickerInsertar(
     onConfirm: (Long) -> Unit,
     onDismiss: () -> Unit
 ) {
+    // Estado del DatePicker
     val datePickerState = rememberDatePickerState()
+
+    // Diálogo de selección de fecha
     DatePickerDialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest = onDismiss,  // Cierra el diálogo si se pulsa fuera de él
         confirmButton = {
             TextButton(onClick = {
-                datePickerState.selectedDateMillis?.let { onConfirm(it) }
-                onDismiss()
+                datePickerState.selectedDateMillis?.let { onConfirm(it) }  // Confirma la fecha seleccionada
+                onDismiss()  // Cierra el diálogo
             }) {
                 Text("Aceptar")
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) {
+            TextButton(onClick = onDismiss) {  // Cierra el diálogo sin confirmar
                 Text("Cancelar")
             }
         }
     ) {
-        DatePicker(state = datePickerState)
+        DatePicker(state = datePickerState)  // Muestra el DatePicker
     }
 }

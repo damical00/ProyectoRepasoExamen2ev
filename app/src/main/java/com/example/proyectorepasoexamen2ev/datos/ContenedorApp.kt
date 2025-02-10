@@ -1,16 +1,20 @@
 package com.example.proyectorepasoexamen2ev.datos
 
+import android.content.Context
 import com.example.proyectorepasoexamen2ev.conexion.PersonasServicioApi
+import com.example.proyectorepasoexamen2ev.conexion.ProfesoresBaseDatos
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 
-interface ContenedorApp{
-    val personasRepositorios:PersonasRepositorios
+interface ContenedorApp {
+    val profesoresRepositorio: ProfesoresRepositorio //Room
+    val personasRepositorios: PersonasRepositorios //JSON
 }
 
-class PersonasContenedorApp:ContenedorApp{
+//----------------- Parte para Json --------------------
+class PersonasContenedorApp(private val context: Context) : ContenedorApp {
     private val baseUrl = "http://10.0.2.2:3000"
     private val json = Json { ignoreUnknownKeys = true }
 
@@ -23,7 +27,15 @@ class PersonasContenedorApp:ContenedorApp{
         retrofit.create(PersonasServicioApi::class.java)
     }
 
-    override val personasRepositorios: PersonasRepositorios by lazy{
+    override val personasRepositorios: PersonasRepositorios by lazy {
         ConexionPersonasRepositorio(servicioRetrofit)
     }
+
+    //------------PARTE PARA ROOM----------------
+    override val profesoresRepositorio: ProfesoresRepositorio by lazy{
+        ConexionProfesoresRepositorio(ProfesoresBaseDatos.obtenerBaseDatos(context).daoProfesores())
+    }
 }
+
+
+

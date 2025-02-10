@@ -31,25 +31,29 @@ import com.example.proyectorepasoexamen2ev.ui.Pantallas.PantallaActualizarPerson
 import com.example.proyectorepasoexamen2ev.ui.Pantallas.PantallaInsertarPersonas
 import com.example.proyectorepasoexamen2ev.ui.Pantallas.PantallaPersonas
 
-enum class PantallasProyecto(@StringRes val titulo: Int){
+// Enum que define las diferentes pantallas del proyecto con sus títulos
+enum class PantallasProyecto(@StringRes val titulo: Int) {
     Inicio(titulo = R.string.inicio),
-    Insertar(titulo= R.string.insertar),
+    Insertar(titulo = R.string.insertar),
     Actualizar(titulo = R.string.actualizar)
 }
 
+// Función principal de la aplicación que maneja la navegación y el estado de la UI
 @Composable
 fun PersonasApp(
     viewModel: PersonasViewModel = viewModel(factory = PersonasViewModel.Factory),
     navController: NavHostController = rememberNavController()
-){
+) {
     val pilaRetroceso by navController.currentBackStackEntryAsState()
 
+    // Obtener la pantalla actual en función de la pila de retroceso
     val pantallaActual = PantallasProyecto.valueOf(
         pilaRetroceso?.destination?.route ?: PantallasProyecto.Inicio.name
     )
 
     Scaffold(
         topBar = {
+            // Barra superior de la aplicación
             AppTopBar(
                 pantallaActual = pantallaActual,
                 puedeNavegarAtras = navController.previousBackStackEntry != null,
@@ -57,9 +61,10 @@ fun PersonasApp(
             )
         },
         floatingActionButton = {
+            // Botón flotante para insertar personas en la pantalla de inicio
             if (pantallaActual.titulo == R.string.inicio) {
                 FloatingActionButton(
-                    onClick = { navController.navigate(route = PantallasProyecto.Insertar.name)}
+                    onClick = { navController.navigate(route = PantallasProyecto.Insertar.name) }
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
@@ -71,54 +76,56 @@ fun PersonasApp(
     ) { innerPadding ->
         val uiState = viewModel.personasUiState
 
+        // Configuración del NavHost para manejar la navegación entre pantallas
         NavHost(
             navController = navController,
             startDestination = PantallasProyecto.Inicio.name,
             modifier = Modifier.padding(innerPadding)
-        ){
-            //Grafo de rutas
-            composable(route = PantallasProyecto.Inicio.name){
+        ) {
+            // Grafo de rutas para cada pantalla
+            composable(route = PantallasProyecto.Inicio.name) {
                 PantallaPersonas(
                     appUiState = uiState,
-                    onPersonasObtenidas={viewModel.obtenerPersonas()},
-                    onPersonaEliminada={viewModel.eliminarPersona(it)},
-                    onPersonaPulsada ={
-                        viewModel.actualizarPersonaPulsada(it)
-                        navController.navigate(PantallasProyecto.Actualizar.name)
+                    onPersonasObtenidas = {
+                        viewModel.obtenerPersonas() // Obtener lista de personas cuando se carga la pantalla de inicio
+                    },
+                    onPersonaEliminada = {
+                        viewModel.eliminarPersona(it) // Eliminar persona seleccionada
+                    },
+                    onPersonaPulsada = {
+                        viewModel.actualizarPersonaPulsada(it) // Actualizar persona pulsada
+                        navController.navigate(PantallasProyecto.Actualizar.name) // Navegar a la pantalla de actualización
                     },
                     modifier = Modifier.fillMaxSize()
                 )
             }
 
-            composable(route = PantallasProyecto.Insertar.name){
+            composable(route = PantallasProyecto.Insertar.name) {
                 PantallaInsertarPersonas(
                     personas = viewModel.personaPulsada,
                     onInsertarPulsado = {
-                        viewModel.insertarPersonas(it)
-                        navController.popBackStack(PantallasProyecto.Inicio.name, inclusive = false)
+                        viewModel.insertarPersonas(it) // Insertar nueva persona
+                        navController.popBackStack(PantallasProyecto.Inicio.name, inclusive = false) // Navegar de vuelta a la pantalla de inicio
                     },
                     modifier = Modifier.fillMaxSize()
                 )
             }
 
             composable(route = PantallasProyecto.Actualizar.name) {
-               PantallaActualizarPersonas(
-                   personas = viewModel.personaPulsada,
-                   onPersonaActualizada ={
-                       viewModel.actualizarPersona(it.id,it)
-                       navController.popBackStack(PantallasProyecto.Inicio.name, inclusive = false)
-                   },
-                   modifier = Modifier.fillMaxSize()
-               )
+                PantallaActualizarPersonas(
+                    personas = viewModel.personaPulsada,
+                    onPersonaActualizada = {
+                        viewModel.actualizarPersona(it.id, it) // Actualizar datos de la persona
+                        navController.popBackStack(PantallasProyecto.Inicio.name, inclusive = false) // Navegar de vuelta a la pantalla de inicio
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
             }
-
         }
     }
 }
 
-
-
-
+// Barra superior de la aplicación con título y botón de navegación
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppTopBar(
@@ -126,18 +133,18 @@ fun AppTopBar(
     puedeNavegarAtras: Boolean,
     onNavegarAtras: () -> Unit,
     modifier: Modifier = Modifier
-){
+) {
     TopAppBar(
-        title = { Text(text = stringResource(id = pantallaActual.titulo)) },
+        title = { Text(text = stringResource(id = pantallaActual.titulo)) }, // Título de la pantalla actual
         colors = TopAppBarDefaults.mediumTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
         ),
         navigationIcon = {
-            if(puedeNavegarAtras) {
+            if (puedeNavegarAtras) {
                 IconButton(onClick = onNavegarAtras) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(id = R.string.atras)
+                        contentDescription = stringResource(id = R.string.atras) // Botón de navegación atrás
                     )
                 }
             }

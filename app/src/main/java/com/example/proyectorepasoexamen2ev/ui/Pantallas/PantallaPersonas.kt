@@ -6,7 +6,6 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,34 +20,34 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.proyectorepasoexamen2ev.R
 import com.example.proyectorepasoexamen2ev.modelo.Personas
-import com.example.proyectorepasoexamen2ev.ui.PantallasProyecto
 import com.example.proyectorepasoexamen2ev.ui.PersonasUiState
 import androidx.compose.material3.Text
 
-
+// Pantalla principal que decide qué pantalla mostrar según el estado de la UI
 @Composable
 fun PantallaPersonas(
     appUiState: PersonasUiState,
-    onPersonasObtenidas:() -> Unit,
+    onPersonasObtenidas: () -> Unit,
     onPersonaPulsada: (Personas) -> Unit,
     onPersonaEliminada: (String) -> Unit,
     modifier: Modifier = Modifier
-){
-    when(appUiState){
-        is PersonasUiState.Cargando -> PantallaCargando(modifier = modifier.fillMaxSize())
-        is PersonasUiState.Error -> PantallaError(modifier = modifier.fillMaxWidth())
+) {
+    when (appUiState) {
+        is PersonasUiState.Cargando -> PantallaCargando(modifier = modifier.fillMaxSize()) // Mostrar pantalla de carga
+        is PersonasUiState.Error -> PantallaError(modifier = modifier.fillMaxWidth()) // Mostrar pantalla de error
         is PersonasUiState.ObtenerExito -> PantaListadoPersonas(
             lista = appUiState.personas,
             onPersonaPulsada = onPersonaPulsada,
             onPersonaEliminada = onPersonaEliminada,
             modifier = modifier.fillMaxWidth()
-        )
-        is  PersonasUiState.CrearExito -> onPersonasObtenidas()
-        is  PersonasUiState.ActualizarExito -> onPersonasObtenidas()
-        is  PersonasUiState.EliminarExito -> onPersonasObtenidas()
+        ) // Mostrar lista de personas
+        is PersonasUiState.CrearExito,
+        is PersonasUiState.ActualizarExito,
+        is PersonasUiState.EliminarExito -> onPersonasObtenidas() // Realizar callback cuando se crea, actualiza o elimina una persona
     }
 }
 
+// Pantalla que muestra una imagen de error
 @Composable
 fun PantallaError(modifier: Modifier) {
     Image(
@@ -58,15 +57,17 @@ fun PantallaError(modifier: Modifier) {
     )
 }
 
+// Pantalla que muestra una imagen de carga
 @Composable
 fun PantallaCargando(modifier: Modifier) {
     Image(
         modifier = modifier.size(200.dp),
         painter = painterResource(R.drawable.loading),
-        contentDescription ="Cargando"
+        contentDescription = "Cargando"
     )
 }
 
+// Pantalla que muestra una lista de personas
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PantaListadoPersonas(
@@ -81,24 +82,19 @@ fun PantaListadoPersonas(
                 modifier = Modifier
                     .padding(8.dp)
                     .combinedClickable(
-                        onClick = { onPersonaPulsada(persona) },
-                        onLongClick = { onPersonaEliminada(persona.id) }
+                        onClick = { onPersonaPulsada(persona) }, // Acción al hacer clic
+                        onLongClick = { onPersonaEliminada(persona.id) } // Acción al hacer clic prolongado
                     )
-            ){
-                        Column(modifier = Modifier.fillMaxWidth()) {
-                            Divider(Modifier.height(2.dp))
+            ) {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Divider(Modifier.height(2.dp)) // Separador entre elementos
 
-                            Text(text = persona.dni)
-
-                            Text(text = persona.nombre)
-
-                            Text(text = persona.apellido)
-
-                            Text(text = persona.fechaNacimiento)
-
-                        }
-                    }
-
+                    Text(text = persona.dni) // Mostrar DNI
+                    Text(text = persona.nombre) // Mostrar nombre
+                    Text(text = persona.apellido) // Mostrar apellido
+                    Text(text = persona.fechaNacimiento) // Mostrar fecha de nacimiento
+                }
+            }
         }
     }
 }
