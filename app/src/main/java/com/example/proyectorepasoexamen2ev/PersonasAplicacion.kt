@@ -8,6 +8,6 @@ class PersonasAplicacion:Application() {
     lateinit var contenedor: ContenedorApp
     override fun onCreate() {
         super.onCreate()
-        contenedor = PersonasContenedorApp()
+        contenedor = PersonasContenedorApp(this)
     }
 }

@@ -26,22 +26,29 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.proyectorepasoexamen2ev.R
-import com.example.proyectorepasoexamen2ev.modelo.Personas
 import com.example.proyectorepasoexamen2ev.ui.Pantallas.PantallaActualizarPersonas
+import com.example.proyectorepasoexamen2ev.ui.Pantallas.PantallaActualizarProfesor
 import com.example.proyectorepasoexamen2ev.ui.Pantallas.PantallaInsertarPersonas
+import com.example.proyectorepasoexamen2ev.ui.Pantallas.PantallaInsertarProfesor
 import com.example.proyectorepasoexamen2ev.ui.Pantallas.PantallaPersonas
+import com.example.proyectorepasoexamen2ev.ui.Pantallas.PantallasProfesores
+import com.example.proyectorepasoexamen2ev.ui.Pantallas.PantallasProfesoresListado
 
 // Enum que define las diferentes pantallas del proyecto con sus títulos
 enum class PantallasProyecto(@StringRes val titulo: Int) {
     Inicio(titulo = R.string.inicio),
     Insertar(titulo = R.string.insertar),
-    Actualizar(titulo = R.string.actualizar)
+    Actualizar(titulo = R.string.actualizar),
+    ListadoProfesores(titulo = R.string.listado_profesores),
+    InsertarProfesor(titulo = R.string.insertar_profesor),
+    ActualizarProfesores(titulo = R.string.actualizar_profesores)
 }
 
 // Función principal de la aplicación que maneja la navegación y el estado de la UI
 @Composable
 fun PersonasApp(
-    viewModel: PersonasViewModel = viewModel(factory = PersonasViewModel.Factory),
+    viewModelJSON: PersonasViewModel = viewModel(factory = PersonasViewModel.Factory),
+    viewModelRoom: ProfesoresViewModel = viewModel(factory = ProfesoresViewModel.Factory),
     navController: NavHostController = rememberNavController()
 ) {
     val pilaRetroceso by navController.currentBackStackEntryAsState()
@@ -74,7 +81,8 @@ fun PersonasApp(
             }
         }
     ) { innerPadding ->
-        val uiState = viewModel.personasUiState
+        val uiStateJSON = viewModelJSON.personasUiState
+        val uiStateRoom = viewModelRoom.profesoresUiState
 
         // Configuración del NavHost para manejar la navegación entre pantallas
         NavHost(
@@ -85,15 +93,15 @@ fun PersonasApp(
             // Grafo de rutas para cada pantalla
             composable(route = PantallasProyecto.Inicio.name) {
                 PantallaPersonas(
-                    appUiState = uiState,
+                    appUiState = uiStateJSON,
                     onPersonasObtenidas = {
-                        viewModel.obtenerPersonas() // Obtener lista de personas cuando se carga la pantalla de inicio
+                        viewModelJSON.obtenerPersonas() // Obtener lista de personas cuando se carga la pantalla de inicio
                     },
                     onPersonaEliminada = {
-                        viewModel.eliminarPersona(it) // Eliminar persona seleccionada
+                        viewModelJSON.eliminarPersona(it) // Eliminar persona seleccionada
                     },
                     onPersonaPulsada = {
-                        viewModel.actualizarPersonaPulsada(it) // Actualizar persona pulsada
+                        viewModelJSON.actualizarPersonaPulsada(it) // Actualizar persona pulsada
                         navController.navigate(PantallasProyecto.Actualizar.name) // Navegar a la pantalla de actualización
                     },
                     modifier = Modifier.fillMaxSize()
@@ -102,10 +110,13 @@ fun PersonasApp(
 
             composable(route = PantallasProyecto.Insertar.name) {
                 PantallaInsertarPersonas(
-                    personas = viewModel.personaPulsada,
+                    personas = viewModelJSON.personaPulsada,
                     onInsertarPulsado = {
-                        viewModel.insertarPersonas(it) // Insertar nueva persona
-                        navController.popBackStack(PantallasProyecto.Inicio.name, inclusive = false) // Navegar de vuelta a la pantalla de inicio
+                        viewModelJSON.insertarPersonas(it) // Insertar nueva persona
+                        navController.popBackStack(
+                            PantallasProyecto.Inicio.name,
+                            inclusive = false
+                        ) // Navegar de vuelta a la pantalla de inicio
                     },
                     modifier = Modifier.fillMaxSize()
                 )
@@ -113,17 +124,59 @@ fun PersonasApp(
 
             composable(route = PantallasProyecto.Actualizar.name) {
                 PantallaActualizarPersonas(
-                    personas = viewModel.personaPulsada,
+                    personas = viewModelJSON.personaPulsada,
                     onPersonaActualizada = {
-                        viewModel.actualizarPersona(it.id, it) // Actualizar datos de la persona
-                        navController.popBackStack(PantallasProyecto.Inicio.name, inclusive = false) // Navegar de vuelta a la pantalla de inicio
+                        viewModelJSON.actualizarPersona(it.id, it) // Actualizar datos de la persona
+                        navController.popBackStack(
+                            PantallasProyecto.Inicio.name,
+                            inclusive = false
+                        ) // Navegar de vuelta a la pantalla de inicio
                     },
                     modifier = Modifier.fillMaxSize()
                 )
             }
+
+            composable(route = PantallasProyecto.ListadoProfesores.name) {
+                PantallasProfesores(
+                    appUiState = uiStateRoom,
+                    onProfesoresObtenidos = { viewModelRoom.obtenerProfesores() },
+                    onProfesorPulsado = {
+                        viewModelRoom.obtenerProfesor(it)
+                        navController.navigate(PantallasProyecto.ActualizarProfesores.name)
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+
+            composable(route = PantallasProyecto.InsertarProfesor.name) {
+                PantallaInsertarProfesor(
+                    onInsertarPulsado = {
+                        viewModelRoom.insertarProfesor(it)
+                        navController.navigate(PantallasProyecto.ListadoProfesores.name)
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+
+            composable(route = PantallasProyecto.ActualizarProfesores.name) {
+                PantallaActualizarProfesor(
+                    profesor = viewModelRoom.profesorPulsado,
+                    onProfesorActualizado = {
+                        viewModelRoom.actualizarProfesor(it)
+                        navController.navigate(PantallasProyecto.ListadoProfesores.name)
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+
+
         }
     }
 }
+
+
+
+
 
 // Barra superior de la aplicación con título y botón de navegación
 @OptIn(ExperimentalMaterial3Api::class)

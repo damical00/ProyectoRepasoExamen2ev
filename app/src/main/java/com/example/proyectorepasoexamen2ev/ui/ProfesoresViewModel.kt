@@ -1,4 +1,4 @@
-package com.example.proyectorepasoexamen2ev.ui.theme
+package com.example.proyectorepasoexamen2ev.ui
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,9 +19,9 @@ sealed interface ProfesoresUiState{
     data class ObtenerExito(val profesores: Profesores): ProfesoresUiState
 
     object CrearExito: ProfesoresUiState
-    object ActualizarExito:ProfesoresUiState
-    object Error:ProfesoresUiState
-    object Cargando:ProfesoresUiState
+    object ActualizarExito: ProfesoresUiState
+    object Error: ProfesoresUiState
+    object Cargando: ProfesoresUiState
 }
 
 class ProfesoresViewModel(private val profesoresRepositorio: ProfesoresRepositorio): ViewModel(){

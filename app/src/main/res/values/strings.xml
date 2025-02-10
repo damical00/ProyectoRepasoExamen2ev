@@ -12,4 +12,9 @@
     <string name="fechaNacimiento" translatable="false">Fecha Nacimiento</string>
     <string name="id" translatable="false">Id</string>
     <string name="ninguna_fecha_seleccinada">Ninguna fecha seleccionada</string>
+    <string name="listado_profesores">Listado profesores</string>
+    <string name="insertar_profesor">Insertar profesor</string>
+    <string name="actualizar_profesores">Actualizar profesores</string>
+    <string name="departamento">Departamento</string>
+    <string name="anyosExp">Años de Experiencia</string>
 </resources>
