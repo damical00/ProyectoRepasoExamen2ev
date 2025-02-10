@@ -5,12 +5,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Face
+import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.Face
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -18,6 +24,9 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -26,13 +35,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.proyectorepasoexamen2ev.R
+import com.example.proyectorepasoexamen2ev.modelo.Ruta
 import com.example.proyectorepasoexamen2ev.ui.Pantallas.PantallaActualizarPersonas
 import com.example.proyectorepasoexamen2ev.ui.Pantallas.PantallaActualizarProfesor
 import com.example.proyectorepasoexamen2ev.ui.Pantallas.PantallaInsertarPersonas
 import com.example.proyectorepasoexamen2ev.ui.Pantallas.PantallaInsertarProfesor
 import com.example.proyectorepasoexamen2ev.ui.Pantallas.PantallaPersonas
 import com.example.proyectorepasoexamen2ev.ui.Pantallas.PantallasProfesores
-import com.example.proyectorepasoexamen2ev.ui.Pantallas.PantallasProfesoresListado
 
 // Enum que define las diferentes pantallas del proyecto con sus títulos
 enum class PantallasProyecto(@StringRes val titulo: Int) {
@@ -43,6 +52,22 @@ enum class PantallasProyecto(@StringRes val titulo: Int) {
     InsertarProfesor(titulo = R.string.insertar_profesor),
     ActualizarProfesores(titulo = R.string.actualizar_profesores)
 }
+
+val listaRutas = listOf(
+    Ruta(
+        PantallasProyecto.Inicio.titulo,
+        PantallasProyecto.Inicio.name,
+        Icons.Filled.AccountCircle,
+        Icons.Outlined.AccountCircle
+    ),
+    Ruta(
+        PantallasProyecto.ListadoProfesores.titulo,
+        PantallasProyecto.ListadoProfesores.name,
+        Icons.Filled.Face,
+        Icons.Outlined.Face
+    )
+
+)
 
 // Función principal de la aplicación que maneja la navegación y el estado de la UI
 @Composable
@@ -58,7 +83,38 @@ fun PersonasApp(
         pilaRetroceso?.destination?.route ?: PantallasProyecto.Inicio.name
     )
 
+    var selectedItem by remember { mutableStateOf(0) }
+
     Scaffold(
+
+        bottomBar = {
+            NavigationBar {
+                listaRutas.forEachIndexed { indice, ruta ->
+                    NavigationBarItem(
+                        icon = {
+                            if(selectedItem == indice)
+                                Icon(
+                                    imageVector = ruta.iconoLleno,
+                                    contentDescription = stringResource(id = ruta.nombre)
+                                )
+                            else
+                                Icon(
+                                    imageVector = ruta.iconoVacio,
+                                    contentDescription = stringResource(id = ruta.nombre)
+                                )
+                        },
+                        label = { Text(stringResource(id = ruta.nombre)) },
+                        selected = selectedItem == indice,
+                        onClick = {
+                            selectedItem = indice
+                            navController.navigate(ruta.ruta)
+                        }
+                    )
+                }
+            }
+        },
+        modifier = Modifier.fillMaxSize(),
+
         topBar = {
             // Barra superior de la aplicación
             AppTopBar(
@@ -76,6 +132,18 @@ fun PersonasApp(
                     Icon(
                         imageVector = Icons.Filled.Add,
                         contentDescription = stringResource(R.string.insertar_persona)
+                    )
+                }
+            }
+
+            // Botón flotante para insertar personas en la pantalla de listado de profesores
+            if (pantallaActual.titulo == R.string.listado_profesores) {
+                FloatingActionButton(
+                    onClick = { navController.navigate(route = PantallasProyecto.InsertarProfesor.name) }
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = stringResource(R.string.insertar_profesor)
                     )
                 }
             }
@@ -173,9 +241,6 @@ fun PersonasApp(
         }
     }
 }
-
-
-
 
 
 // Barra superior de la aplicación con título y botón de navegación

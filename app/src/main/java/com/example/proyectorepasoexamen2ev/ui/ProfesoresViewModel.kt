@@ -20,6 +20,7 @@ sealed interface ProfesoresUiState{
 
     object CrearExito: ProfesoresUiState
     object ActualizarExito: ProfesoresUiState
+    object EliminarExito: ProfesoresUiState
     object Error: ProfesoresUiState
     object Cargando: ProfesoresUiState
 }
@@ -79,6 +80,8 @@ class ProfesoresViewModel(private val profesoresRepositorio: ProfesoresRepositor
             }
         }
     }
+
+
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {

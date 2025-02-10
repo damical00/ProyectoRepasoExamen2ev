@@ -33,8 +33,8 @@ fun PantallaPersonas(
     modifier: Modifier = Modifier
 ) {
     when (appUiState) {
-        is PersonasUiState.Cargando -> PantallaCargando(modifier = modifier.fillMaxSize()) // Mostrar pantalla de carga
-        is PersonasUiState.Error -> PantallaError(modifier = modifier.fillMaxWidth()) // Mostrar pantalla de error
+        is PersonasUiState.Cargando -> PantallaCargandoJSON(modifier = modifier.fillMaxSize()) // Mostrar pantalla de carga
+        is PersonasUiState.Error -> PantallaErrorJSON(modifier = modifier.fillMaxWidth()) // Mostrar pantalla de error
         is PersonasUiState.ObtenerExito -> PantaListadoPersonas(
             lista = appUiState.personas,
             onPersonaPulsada = onPersonaPulsada,
@@ -49,7 +49,7 @@ fun PantallaPersonas(
 
 // Pantalla que muestra una imagen de error
 @Composable
-fun PantallaError(modifier: Modifier) {
+fun PantallaErrorJSON(modifier: Modifier) {
     Image(
         modifier = modifier.size(200.dp),
         painter = painterResource(R.drawable.error),
@@ -59,7 +59,7 @@ fun PantallaError(modifier: Modifier) {
 
 // Pantalla que muestra una imagen de carga
 @Composable
-fun PantallaCargando(modifier: Modifier) {
+fun PantallaCargandoJSON(modifier: Modifier) {
     Image(
         modifier = modifier.size(200.dp),
         painter = painterResource(R.drawable.loading),

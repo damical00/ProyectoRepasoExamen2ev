@@ -1,7 +1,9 @@
 package com.example.proyectorepasoexamen2ev.ui.Pantallas
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -30,18 +32,19 @@ fun PantallasProfesores(
         is ProfesoresUiState.Error -> PantallaError(modifier = modifier.fillMaxWidth()) // Muestra la pantalla de error
 
         is ProfesoresUiState.ObtenerExitoTodos -> PantallasProfesoresListado(
-            onProfesorPulsado = onProfesorPulsado,
             modifier = Modifier.fillMaxWidth(),
             lista = appUiState.profesores,  // Aquí ya estás pasando correctamente la lista de profesores
             appUiState = appUiState,  // Aquí pasa appUiState en lugar de uiStateRoom
+            onProfesorPulsado = onProfesorPulsado,
             onProfesoresObtenidos = { onProfesoresObtenidos() }
         )
 
 
         is ProfesoresUiState.ObtenerExito, is ProfesoresUiState.CrearExito, is ProfesoresUiState.ActualizarExito -> onProfesoresObtenidos() // Llama a la función cuando se completa la operación
+        else -> {}
     }
 
-
+}
     // Composable que muestra una imagen en caso de error
     @Composable
     fun PantallaError(modifier: Modifier) {
@@ -61,8 +64,9 @@ fun PantallasProfesores(
             contentDescription = "Cargando" // Texto descriptivo
         )
     }
-}
+
 // Composable que muestra la lista de profesores en una LazyColumn
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun PantallasProfesoresListado(
     onProfesorPulsado: (Int) -> Unit,
@@ -76,7 +80,11 @@ fun PantallasProfesoresListado(
             Box(
                 modifier = Modifier
                     .padding(8.dp)
-                    .clickable(onClick = { onProfesorPulsado(profesor.id) })
+                    .combinedClickable (
+                        onClick =  { onProfesorPulsado(profesor.id) },
+                    )
+
+                    //.clickable(onClick = { onProfesorPulsado(profesor.id) })
             ) {
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Divider(Modifier.height(2.dp))
